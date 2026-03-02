@@ -1,7 +1,5 @@
 build
 .git
-
-external/*
 *.txt
 compile_commands.json
 .cache

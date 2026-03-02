@@ -91,15 +91,17 @@ private:
       registry;
 
 public:
-  void add_template(const std::string *name, const std::string *file,
-                    uint *type = nullptr);
-  void add_virtual_template(const std::string *name, const char *render,
-                            const uint render_size, const uint *type = nullptr);
-  void remove_template(const std::string *name);
-  htmlTP::htmlTemplate *get_template(const std::string *name);
+  void add_template(const std::string &name, const std::string &file,
+                    uint type = 0);
+  void add_virtual_template(const std::string &name, const char *render,
+                            const uint render_size, const uint &type = 0);
+  void remove_template(const std::string &name);
+  htmlTP::htmlTemplate *get_template(const std::string &name);
 
-  bool exists(const std::string *name);
+  bool exists(const std::string &name);
 };
+
 using htmlTP_handle = std::unique_ptr<htmlTP::htmlTP_state>;
 
+htmlTP::htmlTP_handle get_htmlTP_handle();
 }; // namespace htmlTP
