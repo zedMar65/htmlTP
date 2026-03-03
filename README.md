@@ -1,6 +1,13 @@
-# Todo: Template based design for serving webpages (c++ backend, since i hate myself) (no JS)
+# HTMLTP - html template compilation server
 
-## Template:
+- Note: this project is very much in pre-pre-pre production so any usage is not recomended and any support is very much required TwT
+- Rest of readme will be only todos and implemented tasks, untill the project is ready for deployment
+
+--
+
+## Todo: Template based design for serving webpages (c++ backend, since i hate myself) (no JS)
+
+### Template:
 
 - Imported with name
 - Vars can be replaced by string values or templates
