@@ -1,6 +1,5 @@
 build
 .git
-*.txt
 compile_commands.json
 .cache
 *.html
