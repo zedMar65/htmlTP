@@ -1,18 +1,30 @@
 #include "extensions.hpp"
 #include "htmlTP/htmlTP.hpp"
+#include "htmlTP_priv.hpp"
 #include <algorithm>
 #include <array>
 #include <filesystem>
 #include <memory>
 #include <sys/stat.h>
 
+struct htmlTP::htmlTP_state::Registry {
+  ~Registry() = default;
+  std::unordered_map<std::string, std::unique_ptr<htmlTP::htmlTemplate>> map_;
+};
+
+htmlTP::htmlTP_state::htmlTP_state() {
+  registry = std::make_unique<Registry>();
+}
+
+htmlTP::htmlTP_state::~htmlTP_state() = default;
+
 void htmlTP::htmlTP_state::add_template(const std::string &name,
                                         const std::string &file, uint type) {
   if (exists(name)) {
     throw std::runtime_error("Duplicate key: " + name);
   }
-  registry[name] = std::make_unique<htmlTP::htmlTemplate>();
-  htmlTP::htmlTemplate *tp = registry[name].get();
+  registry->map_[name] = htmlTP::get_TP_handle();
+  htmlTP::htmlTemplate *tp = registry->map_[name].get();
 
   struct stat sb;
 
@@ -54,8 +66,8 @@ void htmlTP::htmlTP_state::add_virtual_template(const std::string &name,
   if (exists(name)) {
     throw std::runtime_error("Duplicate key: " + name);
   }
-  registry[name] = std::make_unique<htmlTP::htmlTemplate>();
-  htmlTP::htmlTemplate *tp = registry[name].get();
+  registry->map_[name] = htmlTP::get_TP_handle();
+  htmlTP::htmlTemplate *tp = registry->map_[name].get();
   tp->set_template_size(render_size);
   *tp->tp_handle() = std::make_unique<char[]>(render_size);
   *((*tp->tp_handle()).get()) = *render;
@@ -67,11 +79,11 @@ void htmlTP::htmlTP_state::remove_template(const std::string &name) {
   if (!exists(name)) {
     throw std::out_of_range("Key not found: " + name);
   }
-  registry.erase(name);
+  registry->map_.erase(name);
 }
 
 bool htmlTP::htmlTP_state::exists(const std::string &name) {
-  return (registry.find(name) == registry.end()) ? false : true;
+  return (registry->map_.find(name) == registry->map_.end()) ? false : true;
 }
 
 htmlTP::htmlTP_handle htmlTP::get_htmlTP_handle() {

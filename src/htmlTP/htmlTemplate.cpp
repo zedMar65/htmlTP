@@ -1,4 +1,5 @@
 #include "htmlTP/htmlTP.hpp"
+#include "htmlTP_priv.hpp"
 
 bool htmlTP::htmlTemplate::render_lock() { return flags & RENDER_MASK; }
 void htmlTP::htmlTemplate::set_render_lock(bool lock) {
@@ -41,4 +42,8 @@ std::unique_ptr<char[]> *htmlTP::htmlTemplate::tp_handle() { return &tp; }
 
 std::unique_ptr<char[]> *htmlTP::htmlTemplate::render_handle() {
   return &render;
+}
+
+htmlTP::TP_handle htmlTP::get_TP_handle() {
+  return std::make_unique<htmlTP::htmlTemplate>();
 }
