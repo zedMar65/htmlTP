@@ -1,14 +1,17 @@
 #pragma once
 
+#include <cinttypes>
+#include <cstdint>
 #include <memory>
 #include <string>
-#include <unordered_map>
 
 namespace htmlTP {
 
 // Bitwise interaction flags
 enum {
   LSB_MASK = 0xFF,
+
+  VIRTUALITY_MASK = 0b11 << 6,
   TYPE_MASK = 0b11 << 4,
   RENDER_STATE_MASK = 0b11 << 2,
   TEMPLATE_STATE_MASK = 0b1 << 1,
@@ -16,11 +19,14 @@ enum {
 
   UNDEFINED = 0u,
 
+  VIRT_RAW = 1u,
+  VIRT_VIRTUAL = 2u,
+  VIRT_FILE = 3u,
+
   HTML_TYPE = 1u,
   JS_TYPE = 2u,
   CSS_TYPE = 3u,
 
-  NO_RENDER = 0u,
   PARTIAL_RENDER = 1u,
   FULL_RENDER = 2u,
 
@@ -56,16 +62,24 @@ public:
   htmlTP_state();
   ~htmlTP_state();
   void add_template(const std::string &name, const std::string &file,
-                    uint type = 0);
-  void add_virtual_template(const std::string &name, const char *render,
-                            const uint render_size, const uint &type = 0);
+                    uint type = 0, uint32_t template_size = 0);
+
+  void add_virtual_template(const std::string &name,
+                            const std::string &file_name,
+                            uint32_t template_size = UNDEFINED,
+                            uint type = UNDEFINED, char *raw_data[] = nullptr,
+                            const bool parse = false,
+                            uint virtuality = UNDEFINED);
+
   void remove_template(const std::string &name);
-  htmlTP::htmlTemplate *get_template(const std::string &name);
+
+  htmlTemplate *get_template(const std::string &name);
 
   bool exists(const std::string &name);
 };
 
-using htmlTP_handle = std::unique_ptr<htmlTP::htmlTP_state>;
+using htmlTP_handle = std::unique_ptr<htmlTP_state>;
 
-htmlTP::htmlTP_handle get_htmlTP_handle();
+htmlTP_handle get_htmlTP_handle();
+
 }; // namespace htmlTP
