@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cinttypes>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -52,30 +51,27 @@ enum {
 */
 
 struct htmlTemplate;
+struct Registry;
 
 struct htmlTP_state {
 private:
-  struct Registry;
   std::unique_ptr<Registry> registry;
 
 public:
   htmlTP_state();
   ~htmlTP_state();
-  void add_template(const std::string &name, const std::string &file,
-                    uint type = 0, uint32_t template_size = 0);
 
-  void add_virtual_template(const std::string &name,
-                            const std::string &file_name,
-                            uint32_t template_size = UNDEFINED,
-                            uint type = UNDEFINED, char *raw_data[] = nullptr,
-                            const bool parse = false,
-                            uint virtuality = UNDEFINED);
+  int add_virtual_template(std::string name, std::string file_name,
+                           uint32_t template_size = UNDEFINED,
+                           uint type = UNDEFINED, char *raw_data[] = nullptr,
+                           const bool parse = false,
+                           uint virtuality = UNDEFINED);
 
-  void remove_template(const std::string &name);
+  void remove_template(const std::string name);
 
-  htmlTemplate *get_template(const std::string &name);
+  htmlTemplate *get_template(const std::string name);
 
-  bool exists(const std::string &name);
+  bool exists(const std::string name);
 };
 
 using htmlTP_handle = std::unique_ptr<htmlTP_state>;
