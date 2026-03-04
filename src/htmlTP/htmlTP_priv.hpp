@@ -1,5 +1,6 @@
 #pragma once
 #include "htmlTP/htmlTP.hpp"
+#include <array>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -21,6 +22,7 @@ private:
   std::unique_ptr<char[]> tp = nullptr;
 
 public:
+  ~htmlTemplate() noexcept = default;
   uint virtual_state();
   void set_virtual_state(uint virtual_state_);
 
@@ -50,7 +52,6 @@ public:
 };
 
 struct Registry {
-  ~Registry() = default;
 
 private:
   std::unordered_map<std::string, int> id_map_;
@@ -58,6 +59,7 @@ private:
   std::unordered_map<int, std::unique_ptr<htmlTemplate>> map_;
 
 public:
+  ~Registry() noexcept = default;
   int get_id(std::string name);
 
   int new_object(std::string name);
@@ -75,7 +77,7 @@ using TP_handle = std::unique_ptr<htmlTemplate>;
 
 TP_handle new_TP_handle();
 
-void parse_TP(htmlTemplate &TP);
+void parse_TP(htmlTemplate &TP, bool force, htmlTP_state *parent);
 void read_TP(htmlTemplate &TP, char *data = nullptr,
              htmlTP_state *parent = nullptr);
 }; // namespace htmlTP

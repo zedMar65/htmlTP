@@ -7,9 +7,9 @@
 
 namespace htmlTP {
 
-htmlTP_state::htmlTP_state() { registry = std::make_unique<Registry>(); }
-
 htmlTP_state::~htmlTP_state() = default;
+
+htmlTP_state::htmlTP_state() { registry = std::make_unique<Registry>(); }
 
 // void htmlTP_state::add_template(const std::string &name,
 //                                 const std::string &file, uint type,
@@ -57,10 +57,6 @@ int htmlTP_state::add_virtual_template(std::string name,
                                        char *raw_data[], bool parse,
                                        uint virtuality) {
 
-  if (exists(name)) {
-    throw std::runtime_error("Duplicate key: " + name);
-  }
-
   int id = registry->new_object(name);
   htmlTemplate &tp = registry->get_handle(id);
 
@@ -84,7 +80,7 @@ int htmlTP_state::add_virtual_template(std::string name,
   }
 
   if (parse) {
-    parse_TP(tp);
+    // TODO: parse_TP(tp);
   }
   return id;
 }

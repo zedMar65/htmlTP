@@ -51,6 +51,12 @@ std::unique_ptr<char[]> *htmlTemplate::render_handle() { return &render; }
 
 TP_handle new_TP_handle() { return std::make_unique<htmlTemplate>(); }
 
+// TODO: remove after propper definitions
+
+void read_TP(htmlTemplate &TP, char *data, htmlTP_state *parent) {}
+
+void parse_TP(htmlTemplate &TP, bool force, htmlTP_state *parent) {}
+
 // TODO: move parsing functions to a different struct/class
 // void parse_TP(htmlTemplate &TP, bool force, htmlTP_state *parent) {
 //  // TODO: reparse only UNDEFINED/force

@@ -1,7 +1,9 @@
+#include "htmlTP/htmlTP.hpp"
 #include "htmlTP_priv.hpp"
 #include "utils.hpp"
 
 namespace htmlTP {
+
 int Registry::get_id(std::string name) {
   if (!exists(name)) {
     throw std::range_error("Value " + name + " not in registry");
