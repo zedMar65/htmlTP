@@ -5,7 +5,7 @@
 
 --
 
-## Todo: Template based design for serving webpages (c++ backend, since i hate myself) (no JS)
+## Support: view TODO: comments, would be much apreciated
 
 ### Template:
 

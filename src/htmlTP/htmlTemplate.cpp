@@ -1,8 +1,5 @@
 #include "htmlTP/htmlTP.hpp"
 #include "htmlTP_priv.hpp"
-#include <fstream>
-#include <functional>
-#include <stdexcept>
 #include <sys/stat.h>
 
 namespace htmlTP {
@@ -36,60 +33,57 @@ void htmlTemplate::set_type(uint type) {
 }
 
 uint32_t htmlTemplate::render_size() { return render_size_; }
-void htmlTemplate::set_render_size(uint32_t size) { render_size_ = size; }
+void htmlTemplate::set_render_size(size_t size) { render_size_ = size; }
 
 uint32_t htmlTemplate::template_size() { return template_size_; }
-void htmlTemplate::set_template_size(uint32_t size) { template_size_ = size; }
+
+void htmlTemplate::set_template_size(size_t size) { template_size_ = size; }
 
 std::string htmlTemplate::parent_name() { return parent; }
 void htmlTemplate::set_parent_name(std::string parent_name) {
   parent = parent_name;
 }
 
-std::unique_ptr<char[]> *htmlTemplate::tp_handle() { return &tp; }
-std::unique_ptr<char[]> *htmlTemplate::render_handle() { return &render; }
+char *htmlTemplate::tp_handle() { return tp.data.get(); }
+char *htmlTemplate::render_handle() { return render.data.get(); }
+
+// inequality in size means the size of template has been changed since last
+// allocatio data ptr being nullptr means its unalocated/destroyed
+
+char *htmlTemplate::alloc_tp() {
+  if (template_size_ != tp.size) {
+    free_tp();
+  }
+  // Aloc new if undefined or destroyed by free_tp
+  if (tp.data == nullptr) {
+    tp.data = std::make_unique<char[]>(template_size_);
+  }
+
+  return tp.data.get();
+}
+
+char *htmlTemplate::alloc_render() {
+  if (render_size_ != render.size) {
+    free_render();
+  }
+  if (render.data == nullptr) {
+    render.data = std::make_unique<char[]>(render_size_);
+  }
+  return render.data.get();
+}
+
+void htmlTemplate::free_tp() {
+  tp.data.reset();
+  tp.data = nullptr;
+  tp.size = 0;
+}
+
+void htmlTemplate::free_render() {
+  render.data.reset();
+  render.data = nullptr;
+  render.size = 0;
+}
 
 TP_handle new_TP_handle() { return std::make_unique<htmlTemplate>(); }
 
-// TODO: remove after propper definitions
-
-void read_TP(htmlTemplate &TP, char *data, htmlTP_state *parent) {}
-
-void parse_TP(htmlTemplate &TP, bool force, htmlTP_state *parent) {}
-
-// TODO: move parsing functions to a different struct/class
-// void parse_TP(htmlTemplate &TP, bool force, htmlTP_state *parent) {
-//  // TODO: reparse only UNDEFINED/force
-//}
-//
-// void read_TP(htmlTemplate &TP, char *data, htmlTP_state *parent) {
-//  // TODO: move dependency of parent functions to registry functions
-//  if (TP.virtual_state() == VIRT_VIRTUAL && *TP.file_handle() != "" &&
-//      parent != nullptr) {
-//    if (!parent->exists(*TP.file_handle())) {
-//      throw std::runtime_error("No defined template reference " +
-//                               *TP.file_handle());
-//    }
-//    TP.set_template_size(
-//        parent->get_template(*TP.file_handle())->render_size());
-//    *TP.tp_handle() = std::make_unique<char[]>(TP.template_size());
-//    *TP.tp_handle()->get() = parent->get_render(TP.file_handle());
-//    return;
-//  }
-//  if (TP.virtual_state() == VIRT_FILE && *TP.file_handle() != "") {
-//    *TP.tp_handle() = std::make_unique<char[]>(TP.template_size());
-//    std::fstream tp_file(*TP.file_handle());
-//    tp_file.read(TP.tp_handle()->get(), TP.template_size());
-//    tp_file.close();
-//    return;
-//  }
-//  if (TP.virtual_state() == VIRT_RAW && data != nullptr) {
-//    *TP.tp_handle() = std::make_unique<char[]>(TP.template_size());
-//    *TP.tp_handle()->get() = *data;
-//    return;
-//  }
-//
-//  throw std::runtime_error("Could not resolve template source for: " +
-//                           *TP.name_handle());
-//}
 }; // namespace htmlTP

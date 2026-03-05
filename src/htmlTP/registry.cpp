@@ -31,14 +31,14 @@ int Registry::new_object(std::string name) {
   return id_;
 }
 
-htmlTemplate &Registry::get_handle(const int id_) {
+htmlTemplate *Registry::get_handle(const int id_) {
   if (!exists(id_)) {
     throw std::range_error("Value " + std::to_string(id_) + " not in registry");
   }
-  return *map_[id_].get();
+  return map_[id_].get();
 }
 
-htmlTemplate &Registry::get_handle(std::string name) {
+htmlTemplate *Registry::get_handle(std::string name) {
   return get_handle(get_id(name));
 }
 

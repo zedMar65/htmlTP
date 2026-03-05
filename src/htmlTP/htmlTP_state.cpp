@@ -1,7 +1,6 @@
 #include "htmlTP/htmlTP.hpp"
 #include "htmlTP_priv.hpp"
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <sys/stat.h>
 
@@ -9,7 +8,11 @@ namespace htmlTP {
 
 htmlTP_state::~htmlTP_state() = default;
 
-htmlTP_state::htmlTP_state() { registry = std::make_unique<Registry>(); }
+htmlTP_state::htmlTP_state() {
+
+  registry = std::make_unique<Registry>();
+  parser = std::make_unique<Parser>(registry.get());
+}
 
 // void htmlTP_state::add_template(const std::string &name,
 //                                 const std::string &file, uint type,
@@ -54,34 +57,28 @@ htmlTP_state::htmlTP_state() { registry = std::make_unique<Registry>(); }
 int htmlTP_state::add_virtual_template(std::string name,
                                        std::string parent_name,
                                        uint32_t template_size, uint type,
-                                       char *raw_data[], bool parse,
-                                       uint virtuality) {
+                                       bool parse, uint virtuality) {
 
   int id = registry->new_object(name);
-  htmlTemplate &tp = registry->get_handle(id);
+  htmlTemplate *tp = registry->get_handle(id);
 
-  // Parse
-
-  // Force replace some data
+  // TODO: remove initialization and replace with parser.set_data
   if (type != UNDEFINED) {
-    tp.set_type(type);
+    tp->set_type(type);
   }
   if (template_size != UNDEFINED) {
-    tp.set_template_size(template_size);
+    tp->set_template_size(template_size);
   }
   if (virtuality != UNDEFINED) {
-    tp.set_virtual_state(virtuality);
+    tp->set_virtual_state(virtuality);
   }
   if (parent_name != "") {
-    tp.set_parent_name(parent_name);
+    tp->set_parent_name(parent_name);
   }
-  if (raw_data != nullptr) {
-    // TODO: read_TP(tp, raw_data);
+  if (parse) {
+    parser->parse_TP(name);
   }
 
-  if (parse) {
-    // TODO: parse_TP(tp);
-  }
   return id;
 }
 

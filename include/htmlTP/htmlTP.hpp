@@ -52,10 +52,12 @@ enum {
 
 struct htmlTemplate;
 struct Registry;
+struct Parser;
 
 struct htmlTP_state {
 private:
   std::unique_ptr<Registry> registry;
+  std::unique_ptr<Parser> parser;
 
 public:
   htmlTP_state();
@@ -63,8 +65,7 @@ public:
 
   int add_virtual_template(std::string name, std::string file_name,
                            uint32_t template_size = UNDEFINED,
-                           uint type = UNDEFINED, char *raw_data[] = nullptr,
-                           const bool parse = false,
+                           uint type = UNDEFINED, const bool parse = true,
                            uint virtuality = UNDEFINED);
 
   void remove_template(const std::string name);
