@@ -1,6 +1,5 @@
 #pragma once
 #include "htmlTP/htmlTP.hpp"
-#include <array>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -73,11 +72,14 @@ public:
   void free_render();
 };
 
+struct Dep_vector {
+  std::vector<int> in;
+  std::vector<int> out;
+};
 struct Registry {
-
 private:
   std::unordered_map<std::string, int> id_map_;
-  std::unordered_map<int, std::array<std::vector<int>, 2>> dependency_map_;
+  std::unordered_map<int, Dep_vector> dependency_map_;
   std::unordered_map<int, std::unique_ptr<htmlTemplate>> map_;
 
 public:
@@ -89,18 +91,21 @@ public:
   htmlTemplate *get_handle(const int id_);
   htmlTemplate *get_handle(std::string name);
 
-  bool exists(const int &_id);
+  bool exists(const int id_);
   bool exists(std::string name);
 
-  // TODO: add dependency_map interface
+  void add_dependency(std::string name, std::string name_dep,
+                      bool dependeny_direction);
+  void add_dependency(const int id_, const int id_dep,
+                      bool dependeny_direction);
+  Dep_vector *get_dependency(std::string name);
+  Dep_vector *get_dependency(const int id_);
 };
 
 using TP_handle = std::unique_ptr<htmlTemplate>;
 
 TP_handle new_TP_handle();
 
-// TODO: add a function set_data() and/or get_data_handle that takes in TP_info
-// struct
 struct Parser {
 private:
   Registry *registry;

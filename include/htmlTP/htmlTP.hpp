@@ -5,7 +5,7 @@
 
 namespace htmlTP {
 
-// Bitwise interaction flags
+// Bitwise interaction flags for htmlTP object
 // | virtuality(2) | type(2) | render_state(2) | template_state | lock
 enum {
   VIRTUALITY_MASK = 0b11 << 6,
@@ -34,6 +34,14 @@ enum {
   LOCKED = 1u,
 
 };
+
+// 0 - outgoing dependency
+// 1 - incomming dependency
+enum {
+	DEPENDENCY_OUT = 0,
+	DEPENDENCY_IN = 1
+};
+
 /*
  htmlTemplate{
         Rendering data
