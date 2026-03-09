@@ -75,12 +75,9 @@ int htmlTP_state::add_raw_template(std::string name, std::string data,
   htmlTemplate *tp = registry->get_handle(id);
 
   const uint32_t data_len = data.length();
-  TP_data tp_data_ = {"", 0, data_len, 0b0 | VIRT_RAW | FULL_TEMPLATE};
+  TP_data tp_data_ = {"", 0, data_len, 0b0};
   tp->set_data(&tp_data_);
-
-  if (parse) {
-    parser->parse_TP(name);
-  }
+  parser->read_TP(name, data, parse);
 
   return id;
 }

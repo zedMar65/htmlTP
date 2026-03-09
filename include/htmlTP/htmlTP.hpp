@@ -63,6 +63,8 @@ public:
   int add_virtual_template(std::string name, std::string parent_name,
                            const bool parse = true);
 
+  int add_raw_template(std::string name, std::string data, bool parse = true);
+
   void remove_template(const std::string name);
 
   htmlTemplate *get_template(const std::string name);
