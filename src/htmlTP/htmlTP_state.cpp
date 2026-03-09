@@ -55,26 +55,29 @@ htmlTP_state::htmlTP_state() {
 // }
 
 int htmlTP_state::add_virtual_template(std::string name,
-                                       std::string parent_name,
-                                       uint32_t template_size, uint type,
-                                       bool parse, uint virtuality) {
+                                       std::string parent_name, bool parse) {
 
   int id = registry->new_object(name);
   htmlTemplate *tp = registry->get_handle(id);
 
-  // TODO: remove initialization and replace with parser.set_data
-  if (type != UNDEFINED) {
-    tp->set_type(type);
+  tp->set_parent_name(parent_name);
+  if (parse) {
+    parser->parse_TP(name);
   }
-  if (template_size != UNDEFINED) {
-    tp->set_template_size(template_size);
-  }
-  if (virtuality != UNDEFINED) {
-    tp->set_virtual_state(virtuality);
-  }
-  if (parent_name != "") {
-    tp->set_parent_name(parent_name);
-  }
+
+  return id;
+}
+
+int htmlTP_state::add_raw_template(std::string name, std::string data,
+                                   bool parse) {
+
+  int id = registry->new_object(name);
+  htmlTemplate *tp = registry->get_handle(id);
+
+  const uint32_t data_len = data.length();
+  TP_data tp_data_ = {"", 0, data_len, 0b0 | VIRT_RAW | FULL_TEMPLATE};
+  tp->set_data(&tp_data_);
+
   if (parse) {
     parser->parse_TP(name);
   }

@@ -7,6 +7,11 @@ endif()
 
 target_sources(
   htmlTP
-  PUBLIC htmlTemplate.cpp htmlTP_state.cpp
-         ${PROJECT_SOURCE_DIR}/include/htmlTP/htmlTP.hpp
-  PRIVATE htmlTP_priv.hpp extensions.hpp utils.cpp utils.hpp registry.cpp)
+  PUBLIC htmlTP_state.cpp ${PROJECT_SOURCE_DIR}/include/htmlTP/htmlTP.hpp
+  PRIVATE htmlTP_template.cpp
+          htmlTP_priv.hpp
+          htmlTP_extensions.hpp
+          htmlTP_utils.cpp
+          htmlTP_utils.hpp
+          htmlTP_registry.cpp
+          htmlTP_parser.cpp)

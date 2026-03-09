@@ -1,23 +1,23 @@
 #pragma once
 #include "htmlTP/htmlTP.hpp"
 #include <array>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 namespace htmlTP {
 
+struct TP_data {
+  std::string parent = "";
+  uint32_t render_size_ = 0;
+  uint32_t template_size_ = 0;
+  uint32_t flags = 0b0;
+};
+
 struct htmlTemplate {
 private:
-  // TODO: move data to a TP_data struct
-  std::string parent = "";
-  size_t render_size_;
-  size_t template_size_;
-  // | 0x00 | type(2) | render_state(2) | template_state
-  // | render_lock
-  //  render_size is 2^24 bits
-  uint32_t flags = 0b0;
-
+  TP_data data;
   struct Buffer {
     std::unique_ptr<char[]> data = nullptr;
     size_t size = 0;
@@ -31,14 +31,21 @@ public:
     free_render();
     free_tp();
   }
+
+  void set_data(TP_data *data_);
+  TP_data *get_data();
+
   uint virtual_state();
   void set_virtual_state(uint virtual_state_);
 
-  bool render_lock();
-  void set_render_lock(bool lock);
+  uint lock();
+  void set_lock(uint lock);
 
-  bool template_state();
-  void set_template_state(bool template_state);
+  bool template_lock();
+  void set_template_lock(bool lock);
+
+  uint template_state();
+  void set_template_state(uint template_state);
 
   uint render_state();
   void set_render_state(uint render_state);

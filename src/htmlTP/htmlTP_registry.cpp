@@ -1,6 +1,6 @@
 #include "htmlTP/htmlTP.hpp"
 #include "htmlTP_priv.hpp"
-#include "utils.hpp"
+#include "htmlTP_utils.hpp"
 
 namespace htmlTP {
 

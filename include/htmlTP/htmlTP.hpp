@@ -1,41 +1,38 @@
 #pragma once
 
-#include <cstdint>
 #include <memory>
 #include <string>
 
 namespace htmlTP {
 
 // Bitwise interaction flags
+// | virtuality(2) | type(2) | render_state(2) | template_state | lock
 enum {
-  LSB_MASK = 0xFF,
-
   VIRTUALITY_MASK = 0b11 << 6,
   TYPE_MASK = 0b11 << 4,
   RENDER_STATE_MASK = 0b11 << 2,
   TEMPLATE_STATE_MASK = 0b1 << 1,
-  RENDER_MASK = 0b1,
+  LOCK_MASK = 0b1,
 
   UNDEFINED = 0u,
 
-  VIRT_RAW = 1u,
-  VIRT_VIRTUAL = 2u,
-  VIRT_FILE = 3u,
+  VIRT_RAW = 1u << 6,
+  VIRT_VIRTUAL = 2u << 6,
+  VIRT_FILE = 3u << 6,
 
-  HTML_TYPE = 1u,
-  JS_TYPE = 2u,
-  CSS_TYPE = 3u,
+  HTML_TYPE = 1u << 4,
+  JS_TYPE = 2u << 4,
+  CSS_TYPE = 3u << 4,
 
-  PARTIAL_RENDER = 1u,
-  FULL_RENDER = 2u,
+  PARTIAL_RENDER = 1u << 2,
+  FULL_RENDER = 2u << 2,
 
-  NO_TEMPLATE = 0u,
-  FULL_TEMPLATE = 1u,
+  NO_TEMPLATE = 0u << 1,
+  FULL_TEMPLATE = 1u << 1,
 
   UNLOCKED = 0u,
   LOCKED = 1u,
 
-  INT24_MAX = 2147483647,
 };
 /*
  htmlTemplate{
@@ -63,10 +60,8 @@ public:
   htmlTP_state();
   ~htmlTP_state();
 
-  int add_virtual_template(std::string name, std::string file_name,
-                           uint32_t template_size = UNDEFINED,
-                           uint type = UNDEFINED, const bool parse = true,
-                           uint virtuality = UNDEFINED);
+  int add_virtual_template(std::string name, std::string parent_name,
+                           const bool parse = true);
 
   void remove_template(const std::string name);
 
