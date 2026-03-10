@@ -11,6 +11,8 @@ struct TP_data {
   std::string parent = "";
   uint32_t render_size_ = 0;
   uint32_t template_size_ = 0;
+  int render_hash_ = 0;
+  int template_hash_ = 0;
   uint32_t flags = 0b0;
 };
 
@@ -19,6 +21,7 @@ private:
   TP_data data;
   struct Buffer {
     std::unique_ptr<char[]> data = nullptr;
+    // size defined in buffer is current allocation size
     size_t size = 0;
   };
 
@@ -30,6 +33,12 @@ public:
     free_render();
     free_tp();
   }
+
+  void set_render_hash();
+  void set_template_hash();
+
+  int *render_hash_handle();
+  int *template_hash_handle();
 
   void set_data(TP_data *data_);
   TP_data *get_data();

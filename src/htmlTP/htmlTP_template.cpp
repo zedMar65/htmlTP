@@ -14,6 +14,21 @@ void htmlTemplate::set_lock(uint lock) {
   data.flags = (data.flags & ~LOCK_MASK) | lock;
 }
 
+// INFO:  set_render_hash should be called on any final change of render.data
+// template hash likewise
+void htmlTemplate::set_render_hash() {
+  std::hash<std::string_view> hash_f;
+  data.render_hash_ = hash_f(render.data.get());
+}
+
+void htmlTemplate::set_template_hash() {
+  std::hash<std::string_view> hash_f;
+  data.template_hash_ = hash_f(tp.data.get());
+}
+
+int *htmlTemplate::render_hash_handle() { return &data.render_hash_; }
+int *htmlTemplate::template_hash_handle() { return &data.template_hash_; }
+
 uint htmlTemplate::template_state() {
   return (data.flags & TEMPLATE_STATE_MASK);
 }
