@@ -9,24 +9,26 @@ namespace htmlTP {
 
 struct TP_data {
   std::string parent = "";
-  uint32_t render_size_ = 0;
-  uint32_t template_size_ = 0;
+  size_t render_size_ = 0;
+  size_t template_size_ = 0;
   int render_hash_ = 0;
   int template_hash_ = 0;
   uint32_t flags = 0b0;
 };
 
+struct Buffer {
+  std::unique_ptr<char[]> data = nullptr;
+  // size defined in buffer is current allocation size
+  size_t size = 0;
+};
 struct htmlTemplate {
 private:
   TP_data data;
-  struct Buffer {
-    std::unique_ptr<char[]> data = nullptr;
-    // size defined in buffer is current allocation size
-    size_t size = 0;
-  };
 
-  Buffer render;
-  Buffer tp;
+  Buffer *render__;
+  Buffer *tp__;
+  Buffer &render = *render__;
+  Buffer &tp = *tp__;
 
 public:
   ~htmlTemplate() {
@@ -79,6 +81,8 @@ public:
 
   void free_tp();
   void free_render();
+
+  void link_tp_buf(Buffer *buf);
 };
 
 struct Dep_vector {

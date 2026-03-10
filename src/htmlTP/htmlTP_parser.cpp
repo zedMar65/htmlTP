@@ -1,5 +1,7 @@
 #include "htmlTP_priv.hpp"
+#include "htmlTP_utils.hpp"
 #include <fstream>
+#include <stdexcept>
 
 namespace htmlTP {
 
@@ -22,6 +24,15 @@ void Parser::read_TP(std::string name, const std::string data,
 
   htmlTemplate *TP = registry->get_handle(name);
 
+  if (TP->virtual_state() == VIRT_LINK && TP->parent_name() != "" &&
+      registry != nullptr) {
+
+    if (!registry->exists(TP->parent_name())) {
+      throw std::runtime_error("No defined template reference " +
+                               TP->parent_name());
+    }
+  }
+
   // Template read out of parent render
   if (TP->virtual_state() == VIRT_VIRTUAL && TP->parent_name() != "" &&
       registry != nullptr) {
@@ -36,7 +47,9 @@ void Parser::read_TP(std::string name, const std::string data,
 
   // Template read out of file
   else if (TP->virtual_state() == VIRT_FILE && TP->parent_name() != "") {
-
+    if (!file_exists(TP->parent_name())) {
+      throw std::runtime_error("File " + TP->parent_name() + " not found");
+    }
     std::fstream tp_file(TP->parent_name());
     tp_file.read(TP->alloc_tp(), TP->template_size());
     tp_file.close();

@@ -25,3 +25,12 @@
 - Template renders can be seen as another template
 - Template render: compilation result
 - Template template: compilation instructions
+
+### htmltp syntax:
+
+```
+using(predefined_parent_name_for_skipping_dependency_mapping, ...)
+
+[loaded_template_name_in_brackets]
+anything else like html left intact
+```

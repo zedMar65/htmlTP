@@ -68,19 +68,27 @@ void htmlTemplate::set_parent_name(std::string parent_name) {
 char *htmlTemplate::tp_handle() { return tp.data.get(); }
 char *htmlTemplate::render_handle() { return render.data.get(); }
 
-// inequality in size means the size of template has been changed since last
-// allocatio data ptr being nullptr means its unalocated/destroyed
+// WARNING: linking is strictly for VIRT_LINK and should be explisitly unlinked
+// after changing type
+void htmlTemplate::link_tp_buf(Buffer *buf) {
+  free_tp();
+  tp__ = buf;
+}
+void htmlTemplate::unlink_tp_buf(){
+    // TODO: unlink, link to default_buffer for self tp}
 
-char *htmlTemplate::alloc_tp() {
-  if (data.template_size_ != tp.size) {
-    free_tp();
-  }
-  // Aloc new if undefined or destroyed by free_tp
-  if (tp.data == nullptr) {
-    tp.data = std::make_unique<char[]>(data.template_size_);
-  }
+    // inequality in size means the size of template has been changed since last
+    // allocatio data ptr being nullptr means its unalocated/destroyed
 
-  return tp.data.get();
+    char *htmlTemplate::alloc_tp(){
+        if (data.template_size_ != tp.size){free_tp();
+}
+// Aloc new if undefined or destroyed by free_tp
+if (tp.data == nullptr) {
+  tp.data = std::make_unique<char[]>(data.template_size_);
+}
+
+return tp.data.get();
 }
 
 char *htmlTemplate::alloc_render() {
@@ -106,5 +114,5 @@ void htmlTemplate::free_render() {
 }
 
 TP_handle new_TP_handle() { return std::make_unique<htmlTemplate>(); }
-
-}; // namespace htmlTP
+}
+; // namespace htmlTP

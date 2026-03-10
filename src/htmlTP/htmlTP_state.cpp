@@ -68,8 +68,8 @@ int htmlTP_state::add_virtual_template(std::string name,
   return id;
 }
 
-int htmlTP_state::add_raw_template(std::string name, std::string data,
-                                   bool parse) {
+int htmlTP_state::add_const_template(std::string name, std::string data,
+                                     bool parse) {
 
   int id = registry->new_object(name);
   htmlTemplate *tp = registry->get_handle(id);

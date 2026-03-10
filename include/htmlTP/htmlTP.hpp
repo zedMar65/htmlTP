@@ -15,8 +15,10 @@ enum {
   LOCK_MASK = 0b1,
 
   UNDEFINED = 0u,
+  ERROR = -1,
 
-  VIRT_RAW = 1u << 6,
+  VIRT_LINK = 1u << 6,
+  VIRT_RAW = 0u << 6,
   VIRT_VIRTUAL = 2u << 6,
   VIRT_FILE = 3u << 6,
 
@@ -37,10 +39,7 @@ enum {
 
 // 0 - outgoing dependency
 // 1 - incomming dependency
-enum {
-	DEPENDENCY_OUT = 0,
-	DEPENDENCY_IN = 1
-};
+enum { DEPENDENCY_OUT = 0, DEPENDENCY_IN = 1 };
 
 /*
  htmlTemplate{
@@ -71,7 +70,7 @@ public:
   int add_virtual_template(std::string name, std::string parent_name,
                            const bool parse = true);
 
-  int add_raw_template(std::string name, std::string data, bool parse = true);
+  int add_const_template(std::string name, std::string data, bool parse = true);
 
   void remove_template(const std::string name);
 
