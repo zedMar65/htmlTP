@@ -18,12 +18,12 @@ void htmlTemplate::set_lock(uint lock) {
 // template hash likewise
 void htmlTemplate::set_render_hash() {
   std::hash<std::string_view> hash_f;
-  data.render_hash_ = hash_f(render.data.get());
+  data.render_hash_ = hash_f(render__->data.get());
 }
 
 void htmlTemplate::set_template_hash() {
   std::hash<std::string_view> hash_f;
-  data.template_hash_ = hash_f(tp.data.get());
+  data.template_hash_ = hash_f(tp__->data.get());
 }
 
 int *htmlTemplate::render_hash_handle() { return &data.render_hash_; }
@@ -65,8 +65,8 @@ void htmlTemplate::set_parent_name(std::string parent_name) {
   data.parent = parent_name;
 }
 
-char *htmlTemplate::tp_handle() { return tp.data.get(); }
-char *htmlTemplate::render_handle() { return render.data.get(); }
+char *htmlTemplate::tp_handle() { return tp__->data.get(); }
+char *htmlTemplate::render_handle() { return render__->data.get(); }
 
 // WARNING: linking is strictly for VIRT_LINK and should be explisitly unlinked
 // after changing type
@@ -74,45 +74,43 @@ void htmlTemplate::link_tp_buf(Buffer *buf) {
   free_tp();
   tp__ = buf;
 }
-void htmlTemplate::unlink_tp_buf(){
-    // TODO: unlink, link to default_buffer for self tp}
+void htmlTemplate::unlink_tp_buf() { tp__ = &tp_stack; }
+// inequality in size means the size of template has been changed since last
+// allocatio data ptr being nullptr means its unalocated/destroyed
 
-    // inequality in size means the size of template has been changed since last
-    // allocatio data ptr being nullptr means its unalocated/destroyed
+char *htmlTemplate::alloc_tp() {
+  if (data.template_size_ != tp__->size) {
+    free_tp();
+  }
+  // Aloc new if undefined or destroyed by free_tp
+  if (tp__->data == nullptr) {
+    tp__->data = std::make_unique<char[]>(data.template_size_);
+  }
 
-    char *htmlTemplate::alloc_tp(){
-        if (data.template_size_ != tp.size){free_tp();
-}
-// Aloc new if undefined or destroyed by free_tp
-if (tp.data == nullptr) {
-  tp.data = std::make_unique<char[]>(data.template_size_);
-}
-
-return tp.data.get();
+  return tp__->data.get();
 }
 
 char *htmlTemplate::alloc_render() {
-  if (data.render_size_ != render.size) {
+  if (data.render_size_ != render__->size) {
     free_render();
   }
-  if (render.data == nullptr) {
-    render.data = std::make_unique<char[]>(data.render_size_);
+  if (render__->data == nullptr) {
+    render__->data = std::make_unique<char[]>(data.render_size_);
   }
-  return render.data.get();
+  return render__->data.get();
 }
 
 void htmlTemplate::free_tp() {
-  tp.data.reset();
-  tp.data = nullptr;
-  tp.size = 0;
+  tp__->data.reset();
+  tp__->data = nullptr;
+  tp__->size = 0;
 }
 
 void htmlTemplate::free_render() {
-  render.data.reset();
-  render.data = nullptr;
-  render.size = 0;
+  render__->data.reset();
+  render__->data = nullptr;
+  render__->size = 0;
 }
 
 TP_handle new_TP_handle() { return std::make_unique<htmlTemplate>(); }
-}
-; // namespace htmlTP
+}; // namespace htmlTP

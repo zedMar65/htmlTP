@@ -25,10 +25,12 @@ struct htmlTemplate {
 private:
   TP_data data;
 
-  Buffer *render__;
-  Buffer *tp__;
-  Buffer &render = *render__;
-  Buffer &tp = *tp__;
+  // NOT proud of this, but it miiiiiight? work with propper cleanups?
+  Buffer tp_stack = Buffer();
+  Buffer render_stack = Buffer();
+
+  Buffer *tp__ = &tp_stack;
+  Buffer *render__ = &render_stack;
 
 public:
   ~htmlTemplate() {
@@ -83,6 +85,7 @@ public:
   void free_render();
 
   void link_tp_buf(Buffer *buf);
+  void unlink_tp_buf();
 };
 
 struct Dep_vector {
