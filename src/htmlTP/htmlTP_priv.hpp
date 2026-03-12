@@ -86,6 +86,8 @@ public:
 
   void link_tp_buf(Buffer *buf);
   void unlink_tp_buf();
+
+  Buffer *get_render_link();
 };
 
 struct Dep_vector {

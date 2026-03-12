@@ -11,10 +11,6 @@ void Parser::parse_TP(std::string name, bool force) {
   // TODO: write a parsing function
 }
 
-// TODO: add support for VIRT_LINKED type that has a hard link to parent
-// template render
-// TODO: perpetual loading -VIRT_RAW <- explisit loading/destruction since
-// string will need to be loaded somehow
 void Parser::read_TP(std::string name, const std::string data,
                      const bool re_parse) {
   // if reparse flag is set parsing is done auto:
@@ -26,13 +22,12 @@ void Parser::read_TP(std::string name, const std::string data,
 
   if (TP->virtual_state() == VIRT_LINK && TP->parent_name() != "" &&
       registry != nullptr) {
-
     if (!registry->exists(TP->parent_name())) {
       throw std::runtime_error("No defined template reference " +
                                TP->parent_name());
     }
+    TP->link_tp_buf(registry->get_handle(TP->parent_name())->get_render_link());
   }
-
   // Template read out of parent render
   if (TP->virtual_state() == VIRT_VIRTUAL && TP->parent_name() != "" &&
       registry != nullptr) {

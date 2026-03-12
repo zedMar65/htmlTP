@@ -74,6 +74,8 @@ void htmlTemplate::link_tp_buf(Buffer *buf) {
   free_tp();
   tp__ = buf;
 }
+Buffer *htmlTemplate::get_render_link() { return render__; }
+
 void htmlTemplate::unlink_tp_buf() { tp__ = &tp_stack; }
 // inequality in size means the size of template has been changed since last
 // allocatio data ptr being nullptr means its unalocated/destroyed
