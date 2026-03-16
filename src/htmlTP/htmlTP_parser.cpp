@@ -9,6 +9,13 @@ Parser::Parser(Registry *registry_) { registry = registry_; }
 
 void Parser::parse_TP(std::string name, bool force) {
   // TODO: write a parsing function
+  // TODO: add compilation commands parsing of template
+  // TODO: think of a way to put a watchdog on templates and renders to
+  // recompile/reread/reparse after change?
+}
+
+void Parser::parse_compilation(std::stding name) {
+  htmlTemplate &TP = *registry->get_handle(name);
 }
 
 void Parser::read_TP(std::string name, const std::string data,

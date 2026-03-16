@@ -1,5 +1,6 @@
 #pragma once
 #include "htmlTP/htmlTP.hpp"
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -13,6 +14,7 @@ struct TP_data {
   size_t template_size_ = 0;
   int render_hash_ = 0;
   int template_hash_ = 0;
+  int compilation_hash = 0;
   uint32_t flags = 0b0;
 };
 
@@ -31,6 +33,8 @@ private:
 
   Buffer *tp__ = &tp_stack;
   Buffer *render__ = &render_stack;
+
+  std::vector<std::array<int, 2>> compilation_commands;
 
 public:
   ~htmlTemplate() {
