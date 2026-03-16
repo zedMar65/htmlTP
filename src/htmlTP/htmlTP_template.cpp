@@ -1,9 +1,11 @@
 #include "htmlTP/htmlTP.hpp"
 #include "htmlTP_priv.hpp"
+#include "htmlTP_utils.hpp"
+#include <array>
 #include <sys/stat.h>
+#include <vector>
 
 namespace htmlTP {
-
 // Bitwise interaction flags
 // | virtuality(2) | type(2) | render_state(2) | template_state | lock
 void htmlTemplate::set_data(TP_data *data_) { data = *data_; }
@@ -24,6 +26,10 @@ void htmlTemplate::set_render_hash() {
 void htmlTemplate::set_template_hash() {
   std::hash<std::string_view> hash_f;
   data.template_hash_ = hash_f(tp__->data.get());
+}
+
+void htmlTemplate::set_compilaion_hash() {
+  data.compilation_hash = vector22_hash(&compilation_commands);
 }
 
 int *htmlTemplate::render_hash_handle() { return &data.render_hash_; }
@@ -75,6 +81,10 @@ void htmlTemplate::link_tp_buf(Buffer *buf) {
   tp__ = buf;
 }
 Buffer *htmlTemplate::get_render_link() { return render__; }
+
+std::vector<std::array<int, 2>> *htmlTemplate::compilation_commands_handle() {
+  return &compilation_commands;
+}
 
 void htmlTemplate::unlink_tp_buf() { tp__ = &tp_stack; }
 // inequality in size means the size of template has been changed since last

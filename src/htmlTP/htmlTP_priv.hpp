@@ -45,6 +45,9 @@ public:
   void set_render_hash();
   void set_template_hash();
 
+  std::vector<std::array<int, 2>> *compilation_commands_handle();
+  void set_compilaion_hash();
+
   int *render_hash_handle();
   int *template_hash_handle();
 

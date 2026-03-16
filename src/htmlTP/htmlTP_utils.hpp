@@ -1,6 +1,10 @@
 #pragma once
+#include <array>
 #include <string>
+#include <vector>
 namespace htmlTP {
+
+size_t vector22_hash(std::vector<std::array<int, 2>> *v);
 
 class IsChars {
 public:

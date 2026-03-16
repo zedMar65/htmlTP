@@ -57,4 +57,13 @@ int parse_virtual_by_name(std::string parent_) {
   return VIRT_RAW;
 }
 
+size_t vector22_hash(std::vector<std::array<int, 2>> *v) {
+  size_t hash = 0;
+  for (int i = 0; i < v->size(); i++) {
+    hash = (hash + (324723947 + (*v)[i][0])) ^ 93485734985;
+    hash = (hash + (324723947 + (*v)[i][1])) ^ 93485734985;
+  }
+  return hash;
+}
+
 }; // namespace htmlTP
