@@ -14,8 +14,9 @@ void Parser::parse_TP(std::string name, bool force) {
   // recompile/reread/reparse after change?
 }
 
-void Parser::parse_compilation(std::stding name) {
+void Parser::parse_compilation(std::string name) {
   htmlTemplate &TP = *registry->get_handle(name);
+  Compilation_commands *comp_commands = TP.compilation_commands_handle();
 }
 
 void Parser::read_TP(std::string name, const std::string data,

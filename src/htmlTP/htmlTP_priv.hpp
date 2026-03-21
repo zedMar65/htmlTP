@@ -8,6 +8,13 @@
 #include <vector>
 namespace htmlTP {
 
+constexpr int makeFourCC(char c1, char c2, char c3 = 0, char c4 = 0) {
+  return (static_cast<int>(c1) << 24) | (static_cast<int>(c2) << 16) |
+         (static_cast<int>(c3) << 8) | static_cast<int>(c4);
+}
+
+enum { START_CLAUSE = makeFourCC('{', '!'), END_CLAUSE = makeFourCC('!', '}') };
+
 struct TP_data {
   std::string parent = "";
   size_t render_size_ = 0;
@@ -17,6 +24,8 @@ struct TP_data {
   int compilation_hash = 0;
   uint32_t flags = 0b0;
 };
+
+typedef std::vector<std::array<int, 2>> Compilation_commands;
 
 struct Buffer {
   std::unique_ptr<char[]> data = nullptr;
@@ -45,7 +54,7 @@ public:
   void set_render_hash();
   void set_template_hash();
 
-  std::vector<std::array<int, 2>> *compilation_commands_handle();
+  Compilation_commands *compilation_commands_handle();
   void set_compilaion_hash();
 
   int *render_hash_handle();
@@ -138,6 +147,7 @@ private:
 public:
   Parser(Registry *registry_);
 
+  void parse_compilation(std::string name);
   void read_TP(std::string name, const std::string data = "",
                const bool re_parse = true);
   void parse_TP(std::string name, const bool force = false);

@@ -1,5 +1,6 @@
 #include "htmlTP_utils.hpp"
 #include "htmlTP/htmlTP.hpp"
+#include "htmlTP_priv.hpp"
 #include <algorithm>
 #include <array>
 #include <random>
@@ -55,6 +56,16 @@ int parse_virtual_by_name(std::string parent_) {
     return VIRT_FILE;
   }
   return VIRT_RAW;
+}
+
+void parse_compilation_commands(Compilation_commands *comp_commands,
+                                Buffer *buffer) {
+
+  char *end_position = buffer->data.get() + buffer->size;
+  for (char *current_position = buffer->data.get();
+       current_position < end_position; current_position += 1) {
+    if
+  }
 }
 
 size_t vector22_hash(std::vector<std::array<int, 2>> *v) {
