@@ -8,14 +8,14 @@
 #include <vector>
 namespace htmlTP {
 
-constexpr int makeFourCC(char c1, char c2, char c3 = 0, char c4 = 0) {
-  return (static_cast<int>(c1) << 24) | (static_cast<int>(c2) << 16) |
-         (static_cast<int>(c3) << 8) | static_cast<int>(c4);
+constexpr int makefourcc(char c1, char c2, char c3 = 0, char c4 = 0) {
+  return (static_cast<int>(c1)) | (static_cast<int>(c2) << 8) |
+         (static_cast<int>(c3) << 16) | (static_cast<int>(c4) << 24);
 }
 
 enum {
-  START_CLAUSE = makeFourCC('{', '!'),
-  END_CLAUSE = makeFourCC('!', '}'),
+  START_CLAUSE = makefourcc('{', '!'),
+  END_CLAUSE = makefourcc('!', '}'),
   CLAUSE_LENGTH = 2
 };
 
