@@ -13,7 +13,11 @@ constexpr int makeFourCC(char c1, char c2, char c3 = 0, char c4 = 0) {
          (static_cast<int>(c3) << 8) | static_cast<int>(c4);
 }
 
-enum { START_CLAUSE = makeFourCC('{', '!'), END_CLAUSE = makeFourCC('!', '}') };
+enum {
+  START_CLAUSE = makeFourCC('{', '!'),
+  END_CLAUSE = makeFourCC('!', '}'),
+  CLAUSE_LENGTH = 2
+};
 
 struct TP_data {
   std::string parent = "";

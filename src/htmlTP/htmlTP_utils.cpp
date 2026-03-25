@@ -63,8 +63,10 @@ void parse_compilation_commands(Compilation_commands *comp_commands,
 
   char *end_position = buffer->data.get() + buffer->size;
   for (char *current_position = buffer->data.get();
-       current_position < end_position; current_position += 1) {
-    if
+       current_position < end_position - 1; current_position += 1) {
+    // if (START_CLAUSE == current_position){
+
+    //		}
   }
 }
 

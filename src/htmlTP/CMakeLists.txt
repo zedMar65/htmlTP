@@ -8,7 +8,8 @@ endif()
 target_sources(
   htmlTP
   PUBLIC htmlTP_state.cpp ${PROJECT_SOURCE_DIR}/include/htmlTP/htmlTP.hpp
-  PRIVATE htmlTP_template.cpp
+  # INFO: following should be PRIVATE on build
+  htmlTP_template.cpp
           htmlTP_priv.hpp
           htmlTP_extensions.hpp
           htmlTP_utils.cpp
