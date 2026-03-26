@@ -26,7 +26,7 @@ int main() {
   char ab[50];
   char *a = &ab[0];
   a[40] = '{';
-  a[41] = '!';
+  a[41] = 'w';
   const char key = *clause_to_string(START_CLAUSE, CLAUSE_LENGTH).c_str();
 
   for (int i = 0; i < 50 - CLAUSE_LENGTH + 1; i++) {

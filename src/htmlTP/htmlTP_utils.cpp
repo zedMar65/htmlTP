@@ -46,6 +46,7 @@ int parse_virtual_by_name(std::string parent_) {
   if (parent_.length() < 2) {
     return ERROR;
   }
+  // TODO: replace with START_CLAUSE and END_CLAUSE
   if (parent_[0] == '(' && parent_.back() == ')') {
     if (parent_[1] == '*') {
       return VIRT_LINK;
@@ -58,15 +59,26 @@ int parse_virtual_by_name(std::string parent_) {
   return VIRT_RAW;
 }
 
+std::string clause_to_string(int a, int len) {
+  std::string b(len, ' ');
+  for (int i = 0; i < len; i++) {
+    b[i] = char((a >> i * 8) & 0xFFu);
+  }
+  return b;
+}
+
 void parse_compilation_commands(Compilation_commands *comp_commands,
                                 Buffer *buffer) {
 
-  char *end_position = buffer->data.get() + buffer->size;
+  const char *end_position = buffer->data.get() + buffer->size;
+  const char start_key = *clause_to_string(START_CLAUSE, CLAUSE_LENGTH).c_str();
+  const char end_key = *clause_to_string(END_CLAUSE, CLAUSE_LENGTH).c_str();
   for (char *current_position = buffer->data.get();
-       current_position < end_position - 1; current_position += 1) {
-    // if (START_CLAUSE == current_position){
-
-    //		}
+       current_position < end_position - CLAUSE_LENGTH + 1;
+       current_position += 1) {
+    if (start_key == *current_position) {
+      // TODO: start of wawa
+    }
   }
 }
 
