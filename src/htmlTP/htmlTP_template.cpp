@@ -82,7 +82,7 @@ void htmlTemplate::link_tp_buf(Buffer *buf) {
 }
 Buffer *htmlTemplate::get_render_link() { return render__; }
 
-std::vector<std::array<int, 2>> *htmlTemplate::compilation_commands_handle() {
+Compilation_commands *htmlTemplate::compilation_commands_handle() {
   return &compilation_commands;
 }
 

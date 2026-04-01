@@ -28,7 +28,7 @@ int Registry::new_object(std::string name) {
   // unique ID
   int id_;
   do {
-    id_ = id_gen();
+    id_ = id_gen(name);
   } while (exists(id_));
 
   // enter into name and object registry

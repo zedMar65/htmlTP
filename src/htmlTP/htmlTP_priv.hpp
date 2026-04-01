@@ -49,7 +49,7 @@ private:
   Buffer *tp__ = &tp_stack;
   Buffer *render__ = &render_stack;
 
-  std::vector<std::array<int, 2>> compilation_commands;
+  Compilation_commands compilation_commands;
 
 public:
   ~htmlTemplate() {
@@ -157,6 +157,8 @@ public:
   void read_TP(std::string name, const std::string data = "",
                const bool re_parse = true);
   void parse_TP(std::string name, const bool force = false);
-};
 
+  void parse_compilation_commands(Compilation_commands *comp_commands,
+                                  Buffer *buffer, bool future_declare);
+};
 }; // namespace htmlTP

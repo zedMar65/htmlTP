@@ -30,12 +30,12 @@ bool file_exists(std::string file_name) {
   return true;
 }
 
-int id_gen() {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<int> dist;
+int id_gen(std::string) {
+  std::hash<std::string> hasher;
 
-  return dist(gen);
+  std::string s = "heyho";
+
+  return (int)hasher(s);
 }
 
 void clear_name(std::string &name) {
@@ -75,42 +75,13 @@ std::string substr(char *arr, int begin, int len) {
   res[len] = 0;
   return res;
 }
-void parse_compilation_commands(Compilation_commands *comp_commands,
-                                Buffer *buffer, Registry *reg) {
 
-  *comp_commands = Compilation_commands();
-
-  const char *end_position = buffer->data.get() + buffer->size;
-
-  const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
-  const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
-
-  for (char *current_position = buffer->data.get();
-       current_position < end_position - CLAUSE_LENGTH + 1;
-       current_position += 1) {
-    if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
-      comp_commands->push_back(
-          {(int)(current_position - buffer->data.get()), 0, 0});
-    }
-    if (memcmp(current_position, end_key.c_str(), CLAUSE_LENGTH) == 0) {
-      if (comp_commands->back()[1] != 0) {
-        throw std::runtime_error(
-            "Template definition clauses missmached, !} before {!");
-      }
-      comp_commands->back()[1] = (int)(current_position - buffer->data.get()) -
-                                 comp_commands->back()[0] + CLAUSE_LENGTH;
-      comp_commands->back()[2] = reg->get_id(
-          substr(buffer->data.get(), comp_commands->back()[0] + CLAUSE_LENGTH,
-                 comp_commands->back()[1] - CLAUSE_LENGTH * 2));
-    }
-  }
-}
-
-size_t vector22_hash(std::vector<std::array<int, 2>> *v) {
+size_t vector22_hash(Compilation_commands *v) {
   size_t hash = 0;
   for (int i = 0; i < v->size(); i++) {
     hash = (hash + (324723947 + (*v)[i][0])) ^ 93485734985;
     hash = (hash + (324723947 + (*v)[i][1])) ^ 93485734985;
+    hash = (hash + (324723947 + (*v)[i][2])) ^ 93485734985;
   }
   return hash;
 }
