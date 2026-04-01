@@ -3,10 +3,11 @@
 #include "htmlTP_priv.hpp"
 #include <algorithm>
 #include <array>
+#include <cstring>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <sys/stat.h>
-
 namespace htmlTP {
 IsChars::IsChars(const char *charsToRemove) : chars(charsToRemove) {};
 
@@ -67,17 +68,40 @@ std::string clause_to_string(int a, int len) {
   return b;
 }
 
+std::string substr(char *arr, int begin, int len) {
+  char *res = new char[len + 1];
+  for (int i = 0; i < len; i++)
+    res[i] = *(arr + begin + i);
+  res[len] = 0;
+  return res;
+}
 void parse_compilation_commands(Compilation_commands *comp_commands,
-                                Buffer *buffer) {
+                                Buffer *buffer, Registry *reg) {
+
+  *comp_commands = Compilation_commands();
 
   const char *end_position = buffer->data.get() + buffer->size;
-  const char start_key = *clause_to_string(START_CLAUSE, CLAUSE_LENGTH).c_str();
-  const char end_key = *clause_to_string(END_CLAUSE, CLAUSE_LENGTH).c_str();
+
+  const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
+  const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
+
   for (char *current_position = buffer->data.get();
        current_position < end_position - CLAUSE_LENGTH + 1;
        current_position += 1) {
-    if (start_key == *current_position) {
-      // TODO: start of wawa
+    if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
+      comp_commands->push_back(
+          {(int)(current_position - buffer->data.get()), 0, 0});
+    }
+    if (memcmp(current_position, end_key.c_str(), CLAUSE_LENGTH) == 0) {
+      if (comp_commands->back()[1] != 0) {
+        throw std::runtime_error(
+            "Template definition clauses missmached, !} before {!");
+      }
+      comp_commands->back()[1] = (int)(current_position - buffer->data.get()) -
+                                 comp_commands->back()[0] + CLAUSE_LENGTH;
+      comp_commands->back()[2] = reg->get_id(
+          substr(buffer->data.get(), comp_commands->back()[0] + CLAUSE_LENGTH,
+                 comp_commands->back()[1] - CLAUSE_LENGTH * 2));
     }
   }
 }

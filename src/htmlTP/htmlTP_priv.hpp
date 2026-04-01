@@ -29,7 +29,9 @@ struct TP_data {
   uint32_t flags = 0b0;
 };
 
-typedef std::vector<std::array<int, 2>> Compilation_commands;
+// Command: {start character int, length of expression, id of template to
+// replace with}
+typedef std::vector<std::array<int, 3>> Compilation_commands;
 
 struct Buffer {
   std::unique_ptr<char[]> data = nullptr;

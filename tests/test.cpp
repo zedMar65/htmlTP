@@ -1,4 +1,5 @@
 #include "htmlTP/htmlTP.hpp"
+#include <cstring>
 #include <iostream>
 using namespace htmlTP;
 using namespace std;
@@ -26,11 +27,11 @@ int main() {
   char ab[50];
   char *a = &ab[0];
   a[40] = '{';
-  a[41] = 'w';
-  const char key = *clause_to_string(START_CLAUSE, CLAUSE_LENGTH).c_str();
+  a[41] = 'W';
+  const string key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
 
   for (int i = 0; i < 50 - CLAUSE_LENGTH + 1; i++) {
-    if (key == a[i]) {
+    if (memcmp(&a[i], key.c_str(), CLAUSE_LENGTH) == 0) {
       cout << to_string(i);
     }
   }
