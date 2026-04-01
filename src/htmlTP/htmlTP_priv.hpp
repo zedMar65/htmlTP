@@ -2,6 +2,7 @@
 #include "htmlTP/htmlTP.hpp"
 #include <array>
 #include <cstdint>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -43,11 +44,11 @@ private:
   TP_data data;
 
   // NOT proud of this, but it miiiiiight? work with propper cleanups?
-  Buffer tp_stack = Buffer();
-  Buffer render_stack = Buffer();
+  Buffer tp_default;
+  Buffer render_default;
 
-  Buffer *tp__ = &tp_stack;
-  Buffer *render__ = &render_stack;
+  Buffer *tp__;
+  Buffer *render__;
 
   Compilation_commands compilation_commands;
 
@@ -55,6 +56,12 @@ public:
   ~htmlTemplate() {
     free_render();
     free_tp();
+  }
+  htmlTemplate() {
+    tp_default = Buffer();
+    render_default = Buffer();
+    tp__ = &tp_default;
+    render__ = &render_default;
   }
 
   void set_render_hash();
@@ -153,12 +160,10 @@ private:
 public:
   Parser(Registry *registry_);
 
-  void parse_compilation(std::string name);
-  void read_TP(std::string name, const std::string data = "",
-               const bool re_parse = true);
+  void read_TP(std::string name, const std::string data = "");
   void parse_TP(std::string name, const bool force = false);
 
-  void parse_compilation_commands(Compilation_commands *comp_commands,
-                                  Buffer *buffer, bool future_declare);
+  void parse_compilation_commands(htmlTemplate &tp,
+                                  bool future_declare = false);
 };
 }; // namespace htmlTP

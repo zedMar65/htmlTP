@@ -12,8 +12,10 @@ int Registry::get_id(std::string name) {
   if (!exists(name)) {
     throw std::range_error("Value " + name + " not in registry");
   }
-  if (exists(std::stoi(name))) {
-    return std::stoi(name);
+  if (isInteger(name)) {
+    if (exists(std::stoi(name))) {
+      return std::stoi(name);
+    }
   }
   clear_name(name);
   return id_map_[name];

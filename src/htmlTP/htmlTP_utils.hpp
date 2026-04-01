@@ -28,4 +28,5 @@ bool file_exists(std::string file_name);
 std::string substr(char *arr, int begin, int len);
 
 std::string clause_to_string(int a, int len);
+bool isInteger(const std::string &s);
 }; // namespace htmlTP

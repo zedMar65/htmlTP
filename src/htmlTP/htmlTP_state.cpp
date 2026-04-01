@@ -41,7 +41,12 @@ int htmlTP_state::add_const_template(std::string name, std::string data,
   const uint32_t data_len = data.length();
   TP_data tp_data_ = {"", 0, data_len, 0b0};
   tp->set_data(&tp_data_);
-  parser->read_TP(name, data, parse);
+
+  parser->read_TP(name, data);
+
+  if (parse) {
+    parser->parse_TP(name);
+  }
 
   return id;
 }

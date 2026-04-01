@@ -2,6 +2,7 @@
 #include "htmlTP_utils.hpp"
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 
 namespace htmlTP {
@@ -9,18 +10,19 @@ namespace htmlTP {
 Parser::Parser(Registry *registry_) { registry = registry_; }
 
 void Parser::parse_TP(std::string name, bool force) {
+  htmlTemplate *tp = registry->get_handle(name);
+  parse_compilation_commands(*tp, false);
+  Compilation_commands &comp = *tp->compilation_commands_handle();
+  for (int i = 0; i < comp.size(); i++) {
+    printf("%i, %i, %i\n", comp[i][0], comp[i][1], comp[i][2]);
+  }
   // TODO: write a parsing function
-  // TODO: add compilation commands parsing of template
   // TODO: think of a way to put a watchdog on templates and renders to
   // recompile/reread/reparse after change?
 }
 
-void Parser::read_TP(std::string name, const std::string data,
-                     const bool re_parse) {
+void Parser::read_TP(std::string name, const std::string data) {
   // if reparse flag is set parsing is done auto:
-  if (re_parse) {
-    parse_TP(name, registry);
-  }
 
   htmlTemplate *TP = registry->get_handle(name);
 
@@ -33,15 +35,14 @@ void Parser::read_TP(std::string name, const std::string data,
     TP->link_tp_buf(registry->get_handle(TP->parent_name())->get_render_link());
   }
   // Template read out of parent render
-  if (TP->virtual_state() == VIRT_VIRTUAL && TP->parent_name() != "" &&
-      registry != nullptr) {
+  else if (TP->virtual_state() == VIRT_VIRTUAL && TP->parent_name() != "" &&
+           registry != nullptr) {
     if (!registry->exists(TP->parent_name())) {
       throw std::runtime_error("No defined template reference " +
                                TP->parent_name());
     }
 
     *TP->alloc_tp() = *registry->get_handle(TP->parent_name())->render_handle();
-    return;
   }
 
   // Template read out of file
@@ -52,46 +53,42 @@ void Parser::read_TP(std::string name, const std::string data,
     std::fstream tp_file(TP->parent_name());
     tp_file.read(TP->alloc_tp(), TP->template_size());
     tp_file.close();
-    return;
   }
 
   // Template read out of char array
   else if (TP->virtual_state() == VIRT_RAW && data != "") {
     TP->set_template_size(data.length());
     *TP->alloc_tp() = *data.c_str();
-    return;
+  } else {
+    throw std::runtime_error("Could not resolve template source for: " + name);
   }
-
-  throw std::runtime_error("Could not resolve template source for: " + name);
 }
-void Parser::parse_compilation_commands(Compilation_commands *comp_commands,
-                                        Buffer *buffer,
-                                        bool future_declare = false) {
+void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
 
+  Compilation_commands *comp_commands = tp.compilation_commands_handle();
   *comp_commands = Compilation_commands();
 
-  const char *end_position = buffer->data.get() + buffer->size;
+  char *buffer = tp.tp_handle();
 
+  int buf_size = tp.template_size();
+  const char *end_position = buffer + buf_size;
   const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
   const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
+  for (char *current_position = buffer;
+       current_position < end_position - CLAUSE_LENGTH; current_position += 1) {
 
-  for (char *current_position = buffer->data.get();
-       current_position < end_position - CLAUSE_LENGTH + 1;
-       current_position += 1) {
     if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
-      comp_commands->push_back(
-          {(int)(current_position - buffer->data.get()), 0, 0});
+      comp_commands->push_back({(int)(current_position - buffer), 0, 0});
     }
     if (memcmp(current_position, end_key.c_str(), CLAUSE_LENGTH) == 0) {
       if (comp_commands->back()[1] != 0) {
         throw std::runtime_error(
             "Template definition clauses missmached, missing start clause");
       }
-      comp_commands->back()[1] = (int)(current_position - buffer->data.get()) -
+      comp_commands->back()[1] = (int)(current_position - buffer) -
                                  comp_commands->back()[0] + CLAUSE_LENGTH;
-      // TODO: replace id with hash of name for future declarations
       std::string tp_name =
-          substr(buffer->data.get(), comp_commands->back()[0] + CLAUSE_LENGTH,
+          substr(buffer, comp_commands->back()[0] + CLAUSE_LENGTH,
                  comp_commands->back()[1] - CLAUSE_LENGTH * 2);
 
       // If name exists add id, if not and future declaration exists, generate
@@ -106,8 +103,11 @@ void Parser::parse_compilation_commands(Compilation_commands *comp_commands,
         comp_commands->back()[2] = registry->get_id(tp_name);
       }
     }
+    return;
   }
-
+  if (comp_commands->size() == 0) {
+    return;
+  }
   if (comp_commands->back()[1] == 0) {
     throw std::runtime_error(
         "Template definition clauses missmached, missing end clause");

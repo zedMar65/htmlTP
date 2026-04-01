@@ -2,6 +2,7 @@
 #include "htmlTP_priv.hpp"
 #include "htmlTP_utils.hpp"
 #include <array>
+#include <iostream>
 #include <sys/stat.h>
 #include <vector>
 
@@ -86,7 +87,7 @@ Compilation_commands *htmlTemplate::compilation_commands_handle() {
   return &compilation_commands;
 }
 
-void htmlTemplate::unlink_tp_buf() { tp__ = &tp_stack; }
+void htmlTemplate::unlink_tp_buf() { tp__ = &tp_default; }
 // inequality in size means the size of template has been changed since last
 // allocatio data ptr being nullptr means its unalocated/destroyed
 
