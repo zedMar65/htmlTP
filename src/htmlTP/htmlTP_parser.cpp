@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 namespace htmlTP {
 
@@ -13,9 +14,9 @@ void Parser::parse_TP(std::string name, bool force) {
   htmlTemplate *tp = registry->get_handle(name);
   parse_compilation_commands(*tp, false);
   Compilation_commands &comp = *tp->compilation_commands_handle();
-  for (int i = 0; i < comp.size(); i++) {
-    printf("%i, %i, %i\n", comp[i][0], comp[i][1], comp[i][2]);
-  }
+  // for (int i = 0; i < comp.size(); i++) {
+  // printf("%i, %i, %i\n", comp[i][0], comp[i][1], comp[i][2]);
+  //}
   // TODO: write a parsing function
   // TODO: think of a way to put a watchdog on templates and renders to
   // recompile/reread/reparse after change?
@@ -58,7 +59,7 @@ void Parser::read_TP(std::string name, const std::string data) {
   // Template read out of char array
   else if (TP->virtual_state() == VIRT_RAW && data != "") {
     TP->set_template_size(data.length());
-    *TP->alloc_tp() = *data.c_str();
+    strncpy(TP->alloc_tp(), data.c_str(), data.length());
   } else {
     throw std::runtime_error("Could not resolve template source for: " + name);
   }
@@ -75,8 +76,8 @@ void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
   const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
   const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
   for (char *current_position = buffer;
-       current_position < end_position - CLAUSE_LENGTH; current_position += 1) {
-
+       current_position < end_position - CLAUSE_LENGTH + 1;
+       current_position += 1) {
     if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
       comp_commands->push_back({(int)(current_position - buffer), 0, 0});
     }
@@ -103,7 +104,6 @@ void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
         comp_commands->back()[2] = registry->get_id(tp_name);
       }
     }
-    return;
   }
   if (comp_commands->size() == 0) {
     return;
