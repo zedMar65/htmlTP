@@ -36,18 +36,23 @@ int id_gen(std::string s) {
   return (int)hasher(s);
 }
 
-void clear_name(std::string &name) {
+// TODO: redo clear_name function
+std::string clear_name(std::string &name) {
   name.erase(std::remove_if(name.begin(), name.end(), IsChars("<\"\">")),
              name.end());
+  return name;
 }
 
 int parse_virtual_by_name(std::string parent_) {
   if (parent_.length() < 2) {
     return ERROR;
   }
-  // TODO: replace with START_CLAUSE and END_CLAUSE
-  if (parent_[0] == '(' && parent_.back() == ')') {
-    if (parent_[1] == '*') {
+  const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
+  const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
+  if (memcmp(parent_.c_str(), start_key.c_str(), CLAUSE_LENGTH) == 0 &&
+      memcmp(&parent_.c_str()[parent_.size() - 1 - CLAUSE_LENGTH],
+             end_key.c_str(), CLAUSE_LENGTH) == 0) {
+    if (parent_[CLAUSE_LENGTH] == '*') {
       return VIRT_LINK;
     }
     return VIRT_VIRTUAL;

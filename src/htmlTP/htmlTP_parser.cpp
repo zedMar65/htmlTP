@@ -12,14 +12,6 @@ Parser::Parser(Registry *registry_) { registry = registry_; }
 
 void Parser::parse_TP(std::string name, bool force) {
   htmlTemplate *tp = registry->get_handle(name);
-  parse_compilation_commands(*tp, false);
-  Compilation_commands &comp = *tp->compilation_commands_handle();
-  // for (int i = 0; i < comp.size(); i++) {
-  // printf("%i, %i, %i\n", comp[i][0], comp[i][1], comp[i][2]);
-  //}
-  // TODO: write a parsing function
-  // TODO: think of a way to put a watchdog on templates and renders to
-  // recompile/reread/reparse after change?
 }
 
 void Parser::read_TP(std::string name, const std::string data) {
@@ -113,4 +105,13 @@ void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
         "Template definition clauses missmached, missing end clause");
   }
 }
+
+// TODO: lot
+void Parser::parse_dependency(htmlTemplate &tp, bool future_declare) {
+  std::vector<std::string> dependencies;
+  if (tp.virtual_state() == VIRT_VIRTUAL || tp.virtual_state() == VIRT_LINK) {
+    dependencies.push_back(clear_name(&tp.parent_name()));
+  }
+}
+
 }; // namespace htmlTP

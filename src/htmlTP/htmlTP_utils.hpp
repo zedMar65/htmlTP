@@ -19,7 +19,7 @@ private:
 
 int id_gen(std::string s);
 
-void clear_name(std::string &name);
+std::string clear_name(std::string &name);
 
 int parse_virtual_by_name(std::string parent_);
 
