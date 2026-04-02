@@ -30,10 +30,8 @@ bool file_exists(std::string file_name) {
   return true;
 }
 
-int id_gen(std::string) {
+int id_gen(std::string s) {
   std::hash<std::string> hasher;
-
-  std::string s = "heyho";
 
   return (int)hasher(s);
 }

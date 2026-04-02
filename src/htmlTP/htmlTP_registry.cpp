@@ -3,6 +3,7 @@
 #include "htmlTP_utils.hpp"
 
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -29,9 +30,10 @@ int Registry::new_object(std::string name) {
 
   // unique ID
   int id_;
-  do {
-    id_ = id_gen(name);
-  } while (exists(id_));
+  id_ = id_gen(name);
+  if (exists(id_)) {
+    throw std::runtime_error("Internal error id already exists");
+  }
 
   // enter into name and object registry
   id_map_[name] = id_;

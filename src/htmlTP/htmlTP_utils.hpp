@@ -17,7 +17,7 @@ private:
   const char *chars;
 };
 
-int id_gen(std::string);
+int id_gen(std::string s);
 
 void clear_name(std::string &name);
 
