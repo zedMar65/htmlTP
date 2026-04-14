@@ -165,5 +165,7 @@ public:
 
   void parse_compilation_commands(htmlTemplate &tp,
                                   bool future_declare = false);
+
+  void parse_dependency(htmlTemplate &tp, bool future_declare);
 };
 }; // namespace htmlTP

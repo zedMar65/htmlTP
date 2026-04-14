@@ -67,10 +67,12 @@ public:
   htmlTP_state();
   ~htmlTP_state();
 
-  int add_virtual_template(std::string name, std::string parent_name,
+  int add_virtual_template(std::string name, const std::string parent_name,
                            const bool parse = true);
 
-  int add_const_template(std::string name, std::string data, bool parse = true);
+  int add_const_template(const std::string name, const std::string data,
+                         const bool parse = true,
+                         const bool future_declare = false);
 
   void remove_template(const std::string name);
 

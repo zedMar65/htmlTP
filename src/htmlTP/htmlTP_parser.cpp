@@ -108,9 +108,14 @@ void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
 
 // TODO: lot
 void Parser::parse_dependency(htmlTemplate &tp, bool future_declare) {
-  std::vector<std::string> dependencies;
+  std::vector<int> dependencies;
   if (tp.virtual_state() == VIRT_VIRTUAL || tp.virtual_state() == VIRT_LINK) {
-    dependencies.push_back(clear_name(&tp.parent_name()));
+    std::string parent_name = tp.parent_name();
+    dependencies.push_back(registry->get_id(parent_name));
+  }
+  Compilation_commands *comp_commands = tp.compilation_commands_handle();
+  for (int i = 0; i < (*comp_commands).size(); i++) {
+    dependencies.push_back((*comp_commands)[i][2]);
   }
 }
 

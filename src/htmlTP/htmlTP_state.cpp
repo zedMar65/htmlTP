@@ -32,8 +32,9 @@ int htmlTP_state::add_virtual_template(std::string name,
   return id;
 }
 
-int htmlTP_state::add_const_template(std::string name, std::string data,
-                                     bool parse) {
+int htmlTP_state::add_const_template(const std::string name,
+                                     const std::string data, const bool parse,
+                                     const bool future_declare) {
 
   int id = registry->new_object(name);
   htmlTemplate *tp = registry->get_handle(id);
@@ -45,7 +46,8 @@ int htmlTP_state::add_const_template(std::string name, std::string data,
   parser->read_TP(name, data);
 
   if (parse) {
-    parser->parse_compilation_commands(*tp, false);
+    parser->parse_compilation_commands(*tp, future_declare);
+    parser->parse_dependency(*tp, future_declare);
   }
 
   return id;
