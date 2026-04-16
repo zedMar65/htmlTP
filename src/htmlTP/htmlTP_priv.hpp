@@ -166,6 +166,6 @@ public:
   void parse_compilation_commands(htmlTemplate &tp,
                                   bool future_declare = false);
 
-  void parse_dependency(htmlTemplate &tp, bool future_declare);
+  void parse_dependency(std::string name, bool future_declare);
 };
 }; // namespace htmlTP
