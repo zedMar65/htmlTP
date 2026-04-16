@@ -47,7 +47,7 @@ int htmlTP_state::add_const_template(const std::string name,
 
   if (parse) {
     parser->parse_compilation_commands(*tp, future_declare);
-    parser->parse_dependency(*tp, future_declare);
+    parser->parse_dependency(name, future_declare);
   }
 
   return id;
