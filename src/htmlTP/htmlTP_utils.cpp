@@ -38,7 +38,8 @@ int id_gen(std::string s) {
 
 // TODO: redo clear_name function
 std::string clear_name(std::string &name) {
-  name.erase(std::remove_if(name.begin(), name.end(), IsChars("<\"\">")),
+  // TODO: clear name should clear from consts
+  name.erase(std::remove_if(name.begin(), name.end(), IsChars("{}!!")),
              name.end());
   return name;
 }

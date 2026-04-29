@@ -79,6 +79,8 @@ public:
   htmlTemplate *get_template(const std::string name);
 
   bool exists(const std::string name);
+
+  void *get_info(const std::string name);
 };
 
 using htmlTP_handle = std::unique_ptr<htmlTP_state>;

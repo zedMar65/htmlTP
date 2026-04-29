@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 #include <sys/stat.h>
+// WARNING: this is only telemetry purpouses soooo...
+#include <iomanip>
 
 namespace htmlTP {
 
@@ -48,9 +50,33 @@ int htmlTP_state::add_const_template(const std::string name,
   if (parse) {
     parser->parse_compilation_commands(*tp, future_declare);
     parser->parse_dependency(name, future_declare);
+
+    // debug
+    //    std::cout << std::to_string(id) << std::endl;
+    //    Dep_vector &deps = *registry->get_dependency(name);
+    //    for (int i = 0; i < deps.in.size(); i++) {
+    //      std::cout << std::to_string(deps.in[i]) << " ";
+    //    }
   }
 
   return id;
+}
+
+// WARNING: its a void pointer bcause to be honest im too suicidal to think of
+// what kind of data it will return... meow
+void *htmlTP_state::get_info(const std::string name, std::string &ret_info,
+                             bool compile) {
+  std::stringstream info;
+  htmlTemplate *tp = registry->get_handle(name);
+  info << std::setw(16) << "NAME: " << std::setw(32) << name << "\n";
+  info << std::setw(16) << "ID: " << std::setw(32)
+       << std::to_string(registry->get_id(name)) << "\n";
+  info << std::setw() "DEPENDENCIES: \n";
+  Dep_vector *dependencies = registry->get_dependency(name);
+  info << "- IN: \n" for (int i = 0; i < dependencies.in.size();
+                          i++){info << "-- "} info
+       << "- OUT:" ret_info = info.str();
+  return nullptr;
 }
 
 htmlTP_handle get_htmlTP_handle() { return std::make_unique<htmlTP_state>(); }

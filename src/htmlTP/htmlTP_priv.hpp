@@ -168,4 +168,5 @@ public:
 
   void parse_dependency(std::string name, bool future_declare);
 };
+
 }; // namespace htmlTP
