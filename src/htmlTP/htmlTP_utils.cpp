@@ -83,9 +83,9 @@ std::string substr(char *arr, int begin, int len) {
 size_t vector22_hash(Compilation_commands *v) {
   size_t hash = 0;
   for (int i = 0; i < v->size(); i++) {
-    hash = (hash + (324723947 + (*v)[i][0])) ^ 93485734985;
-    hash = (hash + (324723947 + (*v)[i][1])) ^ 93485734985;
-    hash = (hash + (324723947 + (*v)[i][2])) ^ 93485734985;
+    hash = (hash + (324724007 + (*v)[i][0])) ^ 93485735033;
+    hash = (hash + (324724007 + (*v)[i][1])) ^ 93485735033;
+    hash = (hash + (324724007 + (*v)[i][2])) ^ 93485735033;
   }
   return hash;
 }
