@@ -1,5 +1,6 @@
 #include "htmlTP_utils.hpp"
 #include "htmlTP/htmlTP.hpp"
+#include "htmlTP_charNames.hpp"
 #include "htmlTP_priv.hpp"
 #include <algorithm>
 #include <array>
@@ -36,18 +37,18 @@ int id_gen(std::string s) {
   return (int)hasher(s);
 }
 
-// TODO: redo clear_name function
-std::string clear_name(std::string &name) {
+std::string clear_name(const std::string name) {
+  std::string clear_name;
   // TODO: clear name should clear from consts
-  name.erase(std::remove_if(name.begin(), name.end(), IsChars("{}!!")),
-             name.end());
-  return name;
+  return clear_name;
 }
 
 int parse_virtual_by_name(std::string parent_) {
   if (parent_.length() < 2) {
     return ERROR;
   }
+
+  // TODO: redo this with mechanical parsing -> extract to pieces
   const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
   const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
   if (memcmp(parent_.c_str(), start_key.c_str(), CLAUSE_LENGTH) == 0 &&

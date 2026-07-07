@@ -9,7 +9,7 @@ target_sources(
   PUBLIC htmlTP_state.cpp ${PROJECT_SOURCE_DIR}/include/htmlTP/htmlTP.hpp
   htmlTP_template.cpp
           htmlTP_priv.hpp
-          htmlTP_extensions.hpp
+	  htmlTP_charNames.hpp
           htmlTP_utils.cpp
           htmlTP_utils.hpp
           htmlTP_registry.cpp
@@ -21,7 +21,7 @@ target_sources(
   PRIVATE htmlTP_state.cpp ${PROJECT_SOURCE_DIR}/include/htmlTP/htmlTP.hpp
   htmlTP_template.cpp
           htmlTP_priv.hpp
-          htmlTP_extensions.hpp
+	  htmlTP_charNames.hpp
           htmlTP_utils.cpp
           htmlTP_utils.hpp
           htmlTP_registry.cpp

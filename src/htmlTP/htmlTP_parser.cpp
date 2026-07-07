@@ -1,3 +1,4 @@
+#include "htmlTP_charNames.hpp"
 #include "htmlTP_priv.hpp"
 #include "htmlTP_utils.hpp"
 #include <cstring>
