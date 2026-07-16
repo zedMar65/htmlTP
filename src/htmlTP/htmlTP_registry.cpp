@@ -26,6 +26,7 @@ int Registry::new_object(std::string name) {
   if (exists(name)) {
     throw std::runtime_error("Name " + name + "already in registry");
   }
+
   name = clear_name(name);
 
   // unique ID
@@ -64,6 +65,7 @@ bool Registry::exists(const int id_) {
 
 bool Registry::exists(std::string name) {
   name = clear_name(name);
+
   return (id_map_.find(name) == id_map_.end()) ? false : true;
 }
 

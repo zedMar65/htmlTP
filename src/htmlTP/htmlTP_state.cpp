@@ -46,7 +46,6 @@ int htmlTP_state::add_const_template(const std::string name,
   tp->set_data(&tp_data_);
 
   parser->read_TP(name, data);
-
   if (parse) {
     parser->parse_compilation_commands(*tp, future_declare);
     parser->parse_dependency(name, future_declare);
@@ -78,6 +77,7 @@ int htmlTP_state::add_const_template(const std::string name,
 //       << "- OUT:" ret_info = info.str();
 //  return nullptr;
 //}
+//
 
 htmlTP_handle get_htmlTP_handle() { return std::make_unique<htmlTP_state>(); }
 

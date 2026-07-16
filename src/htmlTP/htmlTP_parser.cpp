@@ -66,38 +66,41 @@ void Parser::parse_compilation_commands(htmlTemplate &tp, bool future_declare) {
 
   int buf_size = tp.template_size();
   const char *end_position = buffer + buf_size;
-  const std::string start_key = clause_to_string(START_CLAUSE, CLAUSE_LENGTH);
-  const std::string end_key = clause_to_string(END_CLAUSE, CLAUSE_LENGTH);
-  for (char *current_position = buffer;
-       current_position < end_position - CLAUSE_LENGTH + 1;
-       current_position += 1) {
-    if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
-      comp_commands->push_back({(int)(current_position - buffer), 0, 0});
-    }
-    if (memcmp(current_position, end_key.c_str(), CLAUSE_LENGTH) == 0) {
-      if (comp_commands->back()[1] != 0) {
-        throw std::runtime_error(
-            "Template definition clauses missmached, missing start clause");
-      }
-      comp_commands->back()[1] = (int)(current_position - buffer) -
-                                 comp_commands->back()[0] + CLAUSE_LENGTH;
-      std::string tp_name =
-          substr(buffer, comp_commands->back()[0] + CLAUSE_LENGTH,
-                 comp_commands->back()[1] - CLAUSE_LENGTH * 2);
 
-      // If name exists add id, if not and future declaration exists, generate
-      // id, else throw error
-      if (!registry->exists(tp_name)) {
-        if (future_declare) {
-          comp_commands->back()[2] = id_gen(tp_name);
-        } else {
-          throw std::runtime_error("Future declaration not permited");
-        }
-      } else {
-        comp_commands->back()[2] = registry->get_id(tp_name);
-      }
-    }
-  }
+  // TODO: rewrite to work with new clause logic
+
+  // const std::string start_key = clause_to_string(START_CLAUSE,
+  // CLAUSE_LENGTH); const std::string end_key = clause_to_string(END_CLAUSE,
+  // CLAUSE_LENGTH); for (char *current_position = buffer;
+  //      current_position < end_position - CLAUSE_LENGTH + 1;
+  //      current_position += 1) {
+  //   if (memcmp(current_position, start_key.c_str(), CLAUSE_LENGTH) == 0) {
+  //     comp_commands->push_back({(int)(current_position - buffer), 0, 0});
+  //   }
+  //   if (memcmp(current_position, end_key.c_str(), CLAUSE_LENGTH) == 0) {
+  //     if (comp_commands->back()[1] != 0) {
+  //       throw std::runtime_error(
+  //           "Template definition clauses missmached, missing start clause");
+  //     }
+  //     comp_commands->back()[1] = (int)(current_position - buffer) -
+  //                                comp_commands->back()[0] + CLAUSE_LENGTH;
+  //     std::string tp_name =
+  //         substr(buffer, comp_commands->back()[0] + CLAUSE_LENGTH,
+  //                comp_commands->back()[1] - CLAUSE_LENGTH * 2);
+
+  //    // If name exists add id, if not and future declaration exists, generate
+  //    // id, else throw error
+  //    if (!registry->exists(tp_name)) {
+  //      if (future_declare) {
+  //        comp_commands->back()[2] = id_gen(tp_name);
+  //      } else {
+  //        throw std::runtime_error("Future declaration not permited");
+  //      }
+  //    } else {
+  //      comp_commands->back()[2] = registry->get_id(tp_name);
+  //    }
+  //  }
+  //}
   if (comp_commands->size() == 0) {
     return;
   }
