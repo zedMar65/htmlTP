@@ -11,8 +11,12 @@ namespace htmlTP {
 
 Parser::Parser(Registry *registry_) { registry = registry_; }
 
-void Parser::parse_TP(std::string name, bool force) {
+void Parser::parse_TP_header(std::string name, bool force) {
   htmlTemplate *tp = registry->get_handle(name);
+
+  // TODO: PRIORITY parse handle header wawawawaw
+  // header is a data type that should be passed into the TP when constructing
+  // and it should be parsed and all classes assigned, parsed for missing data
 }
 
 void Parser::read_TP(std::string name, const std::string data) {
@@ -38,7 +42,6 @@ void Parser::read_TP(std::string name, const std::string data) {
 
     *TP->alloc_tp() = *registry->get_handle(TP->parent_name())->render_handle();
   }
-
   // Template read out of file
   else if (TP->virtual_state() == VIRT_FILE && TP->parent_name() != "") {
     if (!file_exists(TP->parent_name())) {
@@ -125,6 +128,39 @@ void Parser::parse_dependency(std::string name, bool future_declare) {
   for (int i = 0; i < dependencies.size(); i++) {
     registry->add_dependency(registry->get_id(name), dependencies[i], 1);
   }
+}
+
+void Parser::parse_virtuality_type(std::string name) {
+
+  htmlTemplate &tp = *registry->get_handle(name);
+  // INFO: since virtuality flag is only 2 bits long(fuck my past self), RAW
+  // virtuality type is interpreted as in need of reparsing by default, all
+  // others are left as is. To avoid this reset_handle before reinterpreting
+  // INFO: VIRT_LINK should be defined manually
+  if (tp.virtual_state() != 0) {
+    return;
+  }
+  // Not the best solution but othervise VIRT flags would have to be unique bits
+  int hit_count = 0;
+  // If multiple hits are found assign the priority type
+  uint priority_type;
+  // If depends on another set to virt_link
+
+  priority_type = VIRT_RAW;
+  if (registry->get_dependency(name)->in.size() != 0) {
+    priority_type = VIRT_VIRTUAL;
+    hit_count += 1;
+  }
+  if (file_exists(tp.parent_name())) {
+    hit_count += 1;
+    priority_type = VIRT_FILE;
+  }
+  if (hit_count > 1) {
+    // WARNING: some warning function should be implemented
+  }
+  tp.set_virtual_state(priority_type);
+
+  return;
 }
 
 }; // namespace htmlTP

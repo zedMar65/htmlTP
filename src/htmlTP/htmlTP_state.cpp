@@ -61,24 +61,6 @@ int htmlTP_state::add_const_template(const std::string name,
   return id;
 }
 
-// WARNING: its a void pointer bcause to be honest im too suicidal to think of
-// what kind of data it will return... meow
-// void *htmlTP_state::get_info(const std::string name, std::string &ret_info,
-//                             bool compile) {
-//  std::stringstream info;
-//  htmlTemplate *tp = registry->get_handle(name);
-//  info << std::setw(16) << "NAME: " << std::setw(32) << name << "\n";
-//  info << std::setw(16) << "ID: " << std::setw(32)
-//       << std::to_string(registry->get_id(name)) << "\n";
-//  info << std::setw() "DEPENDENCIES: \n";
-//  Dep_vector *dependencies = registry->get_dependency(name);
-//  info << "- IN: \n" for (int i = 0; i < dependencies.in.size();
-//                          i++){info << "-- "} info
-//       << "- OUT:" ret_info = info.str();
-//  return nullptr;
-//}
-//
-
 htmlTP_handle get_htmlTP_handle() { return std::make_unique<htmlTP_state>(); }
 
 }; // namespace htmlTP

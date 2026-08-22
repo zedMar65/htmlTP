@@ -19,6 +19,7 @@ void htmlTemplate::set_lock(uint lock) {
 
 // INFO:  set_render_hash should be called on any final change of render.data
 // template hash likewise
+//
 void htmlTemplate::set_render_hash() {
   std::hash<std::string_view> hash_f;
   data.render_hash_ = hash_f(render__->data.get());

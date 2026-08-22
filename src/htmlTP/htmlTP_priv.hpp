@@ -52,7 +52,6 @@ public:
     tp__ = &tp_default;
     render__ = &render_default;
   }
-
   void set_render_hash();
   void set_template_hash();
 
@@ -109,7 +108,9 @@ public:
 };
 
 struct Dep_vector {
+  // Means this template depends on some other
   std::vector<int> in;
+  // Means some other template depends on this
   std::vector<int> out;
 };
 struct Registry {
@@ -156,6 +157,8 @@ public:
                                   bool future_declare = false);
 
   void parse_dependency(std::string name, bool future_declare);
+
+  void parse_virtuality_type(std::string name);
 };
 
 }; // namespace htmlTP
